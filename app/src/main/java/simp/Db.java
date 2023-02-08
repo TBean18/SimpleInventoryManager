@@ -1,20 +1,30 @@
 package simp;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import org.h2.tools.ChangeFileEncryption;
+
+import lombok.Getter;
+import lombok.NonNull;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class Db {
 
+    @NonNull
     static Connection connection;
+    @Getter
+    @Setter
+    static File databaseFile;
 
     public static Connection getConnection() {
         if (connection == null) {
-            createNewDatabase();
+            createNewDatabase(databaseFile.getAbsolutePath());
         }
         return connection;
 
@@ -24,8 +34,9 @@ public class Db {
      * Used to provision a new database.
      * Sets Static Connection on successful connection
      */
-    private static void createNewDatabase() {
-        String url = "jdbc:h2:" + System.getProperty("user.dir") + "/data.db";
+    private static void createNewDatabase(@NonNull String filePath) {
+        // String url = "jdbc:h2:" + System.getProperty("user.dir") + "/data.db";
+        String url = "jdbc:h2:" + filePath.substring(0, filePath.length() - 6);
 
         log.info("Database URL: {}", url);
 

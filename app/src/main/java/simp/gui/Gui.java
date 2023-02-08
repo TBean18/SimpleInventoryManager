@@ -7,6 +7,8 @@ import javax.swing.JFrame;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 
+import lombok.Getter;
+
 public class Gui {
 
     // Class Constants
@@ -17,6 +19,7 @@ public class Gui {
     private static final int BUTTON_HORIZONTAL_SPACING = 10;
     private static final int BUTTON_VERTICAL_SPACING = 10;
     private String APPLICATION_NAME = "Simple Inventory Manager";
+    @Getter
     JFrame MAIN_WINDOW;
     public static final Color backgroundColor = new Color(70, 73, 75), foregroundColor = new Color(187, 187, 187);
 

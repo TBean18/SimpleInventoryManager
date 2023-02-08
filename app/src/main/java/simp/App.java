@@ -18,8 +18,8 @@ public class App {
         App instance = new App();
         log.info("Hello: {}", System.getProperty("user.dir"));
         System.out.println(instance.getGreeting());
-        Connection connection = Db.getConnection();
         Gui gui = new Gui();
+        // Connection connection = Db.getConnection();
 
     }
 
