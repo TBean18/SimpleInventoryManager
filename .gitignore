@@ -7,3 +7,4 @@ build
 bin
 *.jar
 *.db
+.vscode/settings.json

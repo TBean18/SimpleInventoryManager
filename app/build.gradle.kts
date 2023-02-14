@@ -36,6 +36,9 @@ dependencies {
 	testCompileOnly ("org.projectlombok:lombok:1.18.26")
 	testAnnotationProcessor ("org.projectlombok:lombok:1.18.26")
 
+    // Look and Feel
+    implementation("com.formdev:flatlaf:3.0")
+
 
 }
 

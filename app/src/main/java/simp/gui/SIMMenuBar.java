@@ -8,8 +8,11 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import simp.Db;
+import simp.gui.modals.DbSignInModal;
+import simp.gui.modals.NewDbModal;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -53,7 +56,7 @@ public class SIMMenuBar extends JMenuBar implements ActionListener {
         if (e.getSource() == openMenuItem) {
             JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
             int response = fileChooser.showSaveDialog(null);
-            if (response == fileChooser.APPROVE_OPTION) {
+            if (response == JFileChooser.APPROVE_OPTION) {
                 Db.setDatabaseFile(fileChooser.getSelectedFile());
                 new DbSignInModal(((JFrame) SwingUtilities.getWindowAncestor(this)), fileChooser.getSelectedFile());
                 // TODO Do we want this here?
@@ -61,6 +64,8 @@ public class SIMMenuBar extends JMenuBar implements ActionListener {
 
             }
 
+        } else if (e.getSource() == newMenuItem) {
+            new NewDbModal((JFrame) SwingUtilities.getWindowAncestor(this));
         }
 
     }

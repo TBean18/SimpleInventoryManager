@@ -4,14 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JFrame;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+
+import com.formdev.flatlaf.FlatDarculaLaf;
 
 import lombok.Getter;
+import lombok.extern.java.Log;
 
 public class Gui {
 
-    // Class Constants
     private static final int WINDOW_WIDTH = 750;// pixels
     private static final int WINDOW_HEIGHT = 735;// pixels
     private static final int FIELD_WIDTH = 15;// characters
@@ -23,20 +26,22 @@ public class Gui {
     JFrame MAIN_WINDOW;
     public static final Color backgroundColor = new Color(70, 73, 75), foregroundColor = new Color(187, 187, 187);
 
-    // Custom Class Instances
-    protected static DropDownHandler connectionPanel;
-    protected static JTextField searchWordField;
-    protected static JSpinner threadCountField;
-    protected static DropDownHandler dropDownHandler = new DropDownHandler();
-
     public Gui() {
         MAIN_WINDOW = new JFrame(APPLICATION_NAME);
         MAIN_WINDOW.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         MAIN_WINDOW.setMinimumSize(new Dimension(WINDOW_WIDTH, WINDOW_HEIGHT));
+        try {
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         MAIN_WINDOW.setJMenuBar(new SIMMenuBar());
+        MAIN_WINDOW.add(new JPanel());
 
         MAIN_WINDOW.setVisible(true);
 
     }
+
 }
