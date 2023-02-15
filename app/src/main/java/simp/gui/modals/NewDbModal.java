@@ -2,17 +2,15 @@ package simp.gui.modals;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +25,10 @@ public class NewDbModal extends SIMModal {
     private static final String DATABASE_FIELD_PREFIX = "Database File: ";
     private static final String MODAL_TITLE = "Create a new Database";
     private static final String CHOOSE_FILE_BUTTON_LABEL = "Choose File";
+    private PasswordInputPanel passwordInputPanel = SIMModal.generatePasswordInputPanel("Encryption Password",
+            this);
+    private PasswordInputPanel confirmPasswordInputPanel = SIMModal.generatePasswordInputPanel("Confirm Password",
+            this);
 
     public NewDbModal(@NonNull JFrame owner) {
         super(owner, MODAL_TITLE, true);
@@ -53,8 +55,8 @@ public class NewDbModal extends SIMModal {
         ret.add(dataBaseFilePanel);
 
         // Password Selection and Confirmation
-        ret.add(SIMModal.generatePasswordInputPanel("Encryption Password", this));
-        ret.add(SIMModal.generatePasswordInputPanel("Confirm Password", this));
+        ret.add(passwordInputPanel);
+        ret.add(confirmPasswordInputPanel);
 
         ret.add(Box.createVerticalGlue());
         ret.add(SIMModal.generateConfirmationButtonsPanel(this));
@@ -77,7 +79,9 @@ public class NewDbModal extends SIMModal {
 
             case SIMModal.OK_BUTTON_ACTION_COMMAND:
             case SIMModal.PASSWORD_INPUT_ACTION_COMMAND:
-                // TODO Validation
+                if (validatePassword()) {
+                    Db.getConnection();
+                }
                 break;
 
             default:
@@ -85,6 +89,19 @@ public class NewDbModal extends SIMModal {
                 break;
         }
 
+    }
+
+    private boolean validatePassword() {
+        if (!Arrays.equals(passwordInputPanel.getPassword(), confirmPasswordInputPanel.getPassword())) {
+            log.warn("Passwords do not match");
+            return false;
+        }
+        if (Db.getDatabaseFile() == null) {
+            log.warn("File not yet Selected");
+            return false;
+        }
+        log.info("Passwords Match");
+        return true;
     }
 
 }

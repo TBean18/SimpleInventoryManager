@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Db {
 
-    @NonNull
     static Connection connection;
     @Getter
     @Setter
@@ -35,8 +34,12 @@ public class Db {
      * Sets Static Connection on successful connection
      */
     private static void createNewDatabase(@NonNull String filePath) {
+        String dbPath = filePath;
+        if (filePath.substring(filePath.length() - 6).equals(".mv.db")) {
+            dbPath = filePath.substring(0, filePath.length());
+        }
         // String url = "jdbc:h2:" + System.getProperty("user.dir") + "/data.db";
-        String url = "jdbc:h2:" + filePath.substring(0, filePath.length() - 6);
+        String url = "jdbc:h2:" + dbPath;
 
         log.info("Database URL: {}", url);
 

@@ -15,6 +15,34 @@ import lombok.NonNull;
 
 public abstract class SIMModal extends JDialog implements ActionListener {
 
+    /**
+     * Custom wrapper class used for the generatePasswordInputPanel function.
+     */
+    public static class PasswordInputPanel extends JPanel {
+
+        public JPasswordField passwordField = new JPasswordField(12);
+
+        public PasswordInputPanel(String passwordLabel, ActionListener actionListener) {
+            super();
+            this.setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+            this.add(Box.createHorizontalGlue());
+            JLabel dataBasePassLabel = new JLabel(passwordLabel);
+            this.add(dataBasePassLabel);
+            // Stop Text Fields from expanding vertically
+            passwordField.setMaximumSize(passwordField.getPreferredSize());
+            passwordField.addActionListener(actionListener);
+            passwordField.setActionCommand(PASSWORD_INPUT_ACTION_COMMAND);
+            this.add(passwordField);
+            this.add(Box.createHorizontalGlue());
+
+        }
+
+        public char[] getPassword() {
+
+            return passwordField.getPassword();
+        }
+    }
+
     // Class Constants
     public static final String OK_BUTTON_ACTION_COMMAND = "OK BUTTON COMMAND";
     public static final String CANCEL_BUTTON_ACTION_COMMAND = "CANCEL";
@@ -26,25 +54,10 @@ public abstract class SIMModal extends JDialog implements ActionListener {
     public SIMModal(@NonNull JFrame owner, @NonNull String title, boolean modality) {
         super(owner, title, modality);
         this.setLocationRelativeTo(owner);
-
     }
 
-    public static JPanel generatePasswordInputPanel(String passwordLabel, ActionListener actionListener) {
-        // Password
-        JPanel passwordInputPanel = new JPanel();
-        JPasswordField passwordInputField = new JPasswordField(12);
-        passwordInputPanel.setLayout(new BoxLayout(passwordInputPanel, BoxLayout.LINE_AXIS));
-        passwordInputPanel.add(Box.createHorizontalGlue());
-        JLabel dataBasePassLabel = new JLabel(passwordLabel);
-        passwordInputPanel.add(dataBasePassLabel);
-        // Stop Text Fields from expanding vertically
-        passwordInputField.setMaximumSize(passwordInputField.getPreferredSize());
-        passwordInputField.addActionListener(actionListener);
-        passwordInputField.setActionCommand(PASSWORD_INPUT_ACTION_COMMAND);
-        passwordInputPanel.add(passwordInputField);
-        passwordInputPanel.add(Box.createHorizontalGlue());
-
-        return passwordInputPanel;
+    public static PasswordInputPanel generatePasswordInputPanel(String passwordLabel, ActionListener actionListener) {
+        return new PasswordInputPanel(passwordLabel, actionListener);
     }
 
     public static JPanel generateConfirmationButtonsPanel(ActionListener actionListener) {

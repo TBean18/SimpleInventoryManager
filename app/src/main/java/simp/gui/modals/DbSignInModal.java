@@ -12,6 +12,7 @@ import javax.swing.JTextField;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import simp.Db;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -80,6 +81,8 @@ public class DbSignInModal extends JDialog implements ActionListener {
         } else if (command == SIMModal.OK_BUTTON_ACTION_COMMAND
                 || command == SIMModal.PASSWORD_INPUT_ACTION_COMMAND) {
             // TODO Implement Database Login
+            Db.setDatabaseFile(dbFile);
+            Db.getConnection();
             log.warn("Database Signin not yet implemented | {}", e.getActionCommand());
         }
 
