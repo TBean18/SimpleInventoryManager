@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import simp.Db;
+import simp.gui.DbFileChooser;
 
 @Slf4j
 public class NewDbModal extends SIMModal {
@@ -70,7 +71,7 @@ public class NewDbModal extends SIMModal {
                 dispose();
                 break;
             case CHOOSE_FILE_BUTTON_LABEL:
-                JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
+                JFileChooser fileChooser = new DbFileChooser();
                 int response = fileChooser.showSaveDialog(this);
                 if (response == JFileChooser.APPROVE_OPTION) {
                     Db.setDatabaseFile(fileChooser.getSelectedFile());
@@ -91,6 +92,10 @@ public class NewDbModal extends SIMModal {
 
     }
 
+    /**
+     * 
+     * @return True if Passwords Match && DB.file != null
+     */
     private boolean validatePassword() {
         if (!Arrays.equals(passwordInputPanel.getPassword(), confirmPasswordInputPanel.getPassword())) {
             log.warn("Passwords do not match");

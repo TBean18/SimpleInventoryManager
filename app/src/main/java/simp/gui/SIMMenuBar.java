@@ -11,7 +11,7 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import simp.Db;
-import simp.gui.modals.DbSignInModal;
+import simp.gui.modals.OpenDbModal;
 import simp.gui.modals.NewDbModal;
 
 import java.awt.event.ActionEvent;
@@ -54,11 +54,11 @@ public class SIMMenuBar extends JMenuBar implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         log.info("MenuBar Interaction: {}", e.getActionCommand());
         if (e.getSource() == openMenuItem) {
-            JFileChooser fileChooser = new JFileChooser(System.getProperty("user.dir"));
+            JFileChooser fileChooser = new DbFileChooser();
             int response = fileChooser.showSaveDialog(null);
             if (response == JFileChooser.APPROVE_OPTION) {
                 Db.setDatabaseFile(fileChooser.getSelectedFile());
-                new DbSignInModal(((JFrame) SwingUtilities.getWindowAncestor(this)), fileChooser.getSelectedFile());
+                new OpenDbModal(((JFrame) SwingUtilities.getWindowAncestor(this)), fileChooser.getSelectedFile());
                 // TODO Do we want this here?
                 // Db.getConnection();
 

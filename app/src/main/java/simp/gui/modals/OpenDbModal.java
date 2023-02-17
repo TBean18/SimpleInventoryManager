@@ -20,7 +20,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 @Slf4j
-public class DbSignInModal extends JDialog implements ActionListener {
+public class OpenDbModal extends JDialog implements ActionListener {
 
     private static final String MODAL_LABEL = "Database Sign In";
     private static final String DATABASE_INFO_PREFIX = "Database Path: ";
@@ -31,7 +31,7 @@ public class DbSignInModal extends JDialog implements ActionListener {
     private JButton okButton = new JButton("Ok");
     private JPasswordField passwordInputField = new JPasswordField(12);
 
-    public DbSignInModal(@NonNull JFrame owner, @NonNull File databaseFile) {
+    public OpenDbModal(@NonNull JFrame owner, @NonNull File databaseFile) {
         super(owner, MODAL_LABEL, true);
         this.dbFile = databaseFile;
         this.getContentPane().add(generateSignInWindow());
