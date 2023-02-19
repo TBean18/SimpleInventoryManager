@@ -6,12 +6,15 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
+import javax.swing.event.MenuEvent;
+import javax.swing.event.MenuListener;
 
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import simp.Db;
 import simp.gui.modals.OpenDbModal;
+import simp.database.Db;
+import simp.gui.menus.ItemsMenu;
 import simp.gui.modals.NewDbModal;
 
 import java.awt.event.ActionEvent;
@@ -33,6 +36,7 @@ public class SIMMenuBar extends JMenuBar implements ActionListener {
         super();
         createFilesMenu();
         this.add(filesMenu);
+        this.add(new ItemsMenu());
     }
 
     private void createFilesMenu() {
