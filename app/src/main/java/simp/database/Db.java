@@ -7,6 +7,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 
 import org.h2.tools.ChangeFileEncryption;
 import org.h2.tools.RunScript;
@@ -57,7 +58,7 @@ public class Db {
      * Used to provision a new database if none exists at the provided path.
      * Sets Static Connection on successful connection
      */
-    public static void openDatabase(File dbFile) throws Exception {
+    public static void openDatabase(File dbFile, char[] password) throws Exception {
         String filePath = dbFile.getAbsolutePath();
         String dbPath = filePath;
         if (filePath.substring(filePath.length() - 6).equals(".mv.db")) {
@@ -69,7 +70,8 @@ public class Db {
         log.info("Database URL: {}", url);
 
         try {
-            connection = DriverManager.getConnection(url);
+            connection = DriverManager.getConnection(url, "sa", new String(password));
+            Arrays.fill(password, '0');
             if (connection != null) {
                 DatabaseMetaData metaData = connection.getMetaData();
                 log.info("Metadata: {}", metaData.toString());

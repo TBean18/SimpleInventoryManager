@@ -12,7 +12,8 @@ import javax.swing.JTextField;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import simp.Db;
+import simp.database.Db;
+import simp.gui.Gui;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -80,10 +81,14 @@ public class OpenDbModal extends JDialog implements ActionListener {
             dispose();
         } else if (command == SIMModal.OK_BUTTON_ACTION_COMMAND
                 || command == SIMModal.PASSWORD_INPUT_ACTION_COMMAND) {
-            // TODO Implement Database Login
-            Db.setDatabaseFile(dbFile);
-            Db.getConnection();
-            log.warn("Database Signin not yet implemented | {}", e.getActionCommand());
+            try {
+                Db.openDatabase(dbFile, passwordInputField.getPassword());
+                this.dispose();
+            } catch (Exception e1) {
+                log.error("Error occurred while opening database in modal", e1);
+                e1.printStackTrace();
+            }
+
         }
 
     }

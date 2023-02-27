@@ -2,6 +2,7 @@ package simp.gui.modals;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.Arrays;
 
 import javax.swing.Box;
@@ -14,7 +15,7 @@ import javax.swing.JPanel;
 
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import simp.Db;
+import simp.database.Db;
 import simp.gui.DbFileChooser;
 
 @Slf4j
@@ -30,6 +31,8 @@ public class NewDbModal extends SIMModal {
             this);
     private PasswordInputPanel confirmPasswordInputPanel = SIMModal.generatePasswordInputPanel("Confirm Password",
             this);
+
+    File selectedNewDatabaseFile;
 
     public NewDbModal(@NonNull JFrame owner) {
         super(owner, MODAL_TITLE, true);
@@ -74,14 +77,19 @@ public class NewDbModal extends SIMModal {
                 JFileChooser fileChooser = new DbFileChooser();
                 int response = fileChooser.showSaveDialog(this);
                 if (response == JFileChooser.APPROVE_OPTION) {
-                    Db.setDatabaseFile(fileChooser.getSelectedFile());
+                    selectedNewDatabaseFile = fileChooser.getSelectedFile();
                 }
                 break;
 
             case SIMModal.OK_BUTTON_ACTION_COMMAND:
             case SIMModal.PASSWORD_INPUT_ACTION_COMMAND:
-                if (validatePassword()) {
-                    Db.getConnection();
+                if (validatePassword() && selectedNewDatabaseFile != null) {
+                    try {
+                        Db.openDatabase(selectedNewDatabaseFile, passwordInputPanel.getPassword());
+                    } catch (Exception e1) {
+                        e1.printStackTrace();
+                        log.error("Error while creating new database: ", e1);
+                    }
                 }
                 break;
 
