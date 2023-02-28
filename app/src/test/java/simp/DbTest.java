@@ -1,9 +1,12 @@
 package simp;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
+import java.sql.Clob;
+import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
@@ -13,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import lombok.extern.java.Log;
 import simp.database.Db;
 import simp.database.Inventory;
+import simp.database.Item;
 
 public class DbTest {
 
@@ -61,6 +65,19 @@ public class DbTest {
             fail(e.getMessage());
         }
 
+    }
+
+    @Test
+    public void testItemCreation() {
+        Clob itemDescription;
+        try {
+            itemDescription = Db.getConnection().createClob();
+            itemDescription.setString(1, "Test Description");
+            Item testItem = new Item("Unit Test Item", itemDescription, null);
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
 }
