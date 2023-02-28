@@ -1,5 +1,6 @@
 package simp;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -68,16 +69,21 @@ public class DbTest {
     }
 
     @Test
-    public void testItemCreation() {
+    public Item testItemCreation() throws NullPointerException, SQLException {
         Clob itemDescription;
-        try {
-            itemDescription = Db.getConnection().createClob();
-            itemDescription.setString(1, "Test Description");
-            Item testItem = new Item("Unit Test Item", itemDescription, null);
-        } catch (NullPointerException | SQLException e) {
-            e.printStackTrace();
-            fail();
-        }
+        itemDescription = Db.getConnection().createClob();
+        itemDescription.setString(1, "Test Description");
+        Item testItem = new Item("Unit Test Item", itemDescription, null);
+        assertNotNull(testItem);
+        return testItem;
+    }
+
+    @Test
+    public void testItemRead() throws SQLException {
+        Item newItem = testItemCreation();
+        Item.items.clear();
+        Item readItem = Item.getItem(newItem.getId());
+        assertEquals(newItem.getId(), readItem.getId());
     }
 
 }

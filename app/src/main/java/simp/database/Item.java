@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -21,9 +22,13 @@ public class Item {
     public final static String ITEM_DESCRIPTION = "ITEM_DESCRIPTION";
     public final static String ITEM_IMAGE = "ITEM_IMAGE";
 
+    @Getter
     final int id;
+    @Getter
     String title;
+    @Getter
     Clob descriptionText;
+    @Getter
     Blob image;
 
     /**
@@ -39,6 +44,7 @@ public class Item {
         this.image = image;
         // Insert and acquire the unique final id
         this.id = Item.insertItemIntoDatabase(this);
+        Item.items.put(this.id, this);
     }
 
     private Item(int id, String title, Clob descriptionText, Blob image) {
@@ -48,12 +54,16 @@ public class Item {
         this.image = image;
     }
 
-    public static Item getItem(int itemId) throws NullPointerException {
+    public void clearItemCacheMap() {
+        Item.items.clear();
+    }
+
+    public static Item getItem(int itemId) throws SQLException {
         if (items.containsKey(itemId)) {
             return items.get(itemId);
         }
-        log.warn("Unable to find item requested. ID = {}", itemId);
-        throw new NullPointerException("Unable to find Item with Id = " + itemId);
+        log.warn("Unable to find item requested in cache. ID = {}", itemId);
+        return getItemFromDatabase(itemId);
     }
 
     public static Item getItem(int itemId, ResultSet rs) throws SQLException {
@@ -75,6 +85,17 @@ public class Item {
         Item ret = new Item(itemId, rs.getString(ITEM_TITLE), rs.getClob(ITEM_DESCRIPTION),
                 rs.getBlob(ITEM_IMAGE));
         return ret;
+    }
+
+    private static Item getItemFromDatabase(int id) throws SQLException {
+        PreparedStatement stmt = Db.getConnection().prepareStatement("SELECT * FROM Items WHERE ITEM_id = ?",
+                Statement.RETURN_GENERATED_KEYS);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next())
+            return parseItemRow(rs);
+        throw new SQLException("Unable to find Item with Id = " + id);
+
     }
 
     private static int insertItemIntoDatabase(Item item) throws NullPointerException, SQLException {
