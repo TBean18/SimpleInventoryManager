@@ -15,6 +15,25 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Item {
 
+    /**
+     * Data class which is NOT stored in the database
+     */
+    public static class ItemData {
+        @Getter
+        String title;
+        @Getter
+        Clob descriptionText;
+        @Getter
+        Blob image;
+
+        public ItemData(String title, Clob descriptionText, Blob image) {
+            this.title = title;
+            this.descriptionText = descriptionText;
+            this.image = image;
+        }
+
+    }
+
     public final static Map<Integer, Item> items = new HashMap<>();
 
     public final static String ITEM_ID = "ITEM_ID";
@@ -121,6 +140,46 @@ public class Item {
             throw new SQLException("Unable to retrieve generated keys");
         }
 
+    }
+
+    /**
+     * Used to update the Item both in memory and in database with `newData`
+     * 
+     * @param newData Holds the values for the updated Item object
+     */
+    public void update(ItemData newData) throws SQLException {
+        PreparedStatement stmt = Db.getConnection().prepareStatement(
+                "UPDATE Items SET ITEM_Title = ?, ITEM_Description = ?, ITEM_Image = ? WHERE ITEM_Id = ?");
+        stmt.setString(1, newData.title);
+        stmt.setClob(2, newData.descriptionText);
+        stmt.setBlob(3, newData.image);
+        stmt.setInt(4, this.id);
+
+        int numRows = stmt.executeUpdate();
+        if (numRows != 1) {
+            SQLException e = new SQLException("Expected single row update returned with " + numRows + " rows updated");
+            log.error("Unable to update Item - {}", this, e);
+            throw e;
+        }
+        this.title = newData.title;
+        this.descriptionText = newData.descriptionText;
+        this.image = newData.image;
+
+    }
+
+    public boolean equals(Item i) {
+        if (this.id != i.id)
+            return false;
+
+        if (!this.title.equals(i.title))
+            return false;
+
+        if (!this.descriptionText.equals(i.descriptionText))
+            return false;
+
+        if (!this.image.equals(i.image))
+            return false;
+        return true;
     }
 
     public String toString() {

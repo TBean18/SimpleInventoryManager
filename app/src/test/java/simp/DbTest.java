@@ -20,6 +20,7 @@ import lombok.extern.java.Log;
 import simp.database.Db;
 import simp.database.Inventory;
 import simp.database.Item;
+import simp.database.Item.ItemData;
 
 public class DbTest {
 
@@ -81,12 +82,27 @@ public class DbTest {
 
     @Test
     public void testItemRead() throws SQLException {
-        if(testItem == null){
+        if (testItem == null) {
             testItemCreation();
         }
         Item.items.clear();
         Item readItem = Item.getItem(testItem.getId());
         assertEquals(testItem.getId(), readItem.getId());
+    }
+
+    @Test
+    public void testItemUpdate() throws SQLException {
+        if (testItem == null) {
+            testItemCreation();
+        }
+        Item cur = Item.getItem(testItem.getId());
+
+        Clob newDescription = Db.getConnection().createClob();
+        newDescription.setString(1, "New Updated Description");
+        String newTitle = "New Title";
+        cur.update(new ItemData(newTitle, newDescription, null));
+        assertEquals(newTitle, cur.getTitle());
+
     }
 
 }
