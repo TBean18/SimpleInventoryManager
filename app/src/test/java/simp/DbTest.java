@@ -10,7 +10,9 @@ import java.sql.Clob;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -21,11 +23,12 @@ import simp.database.Item;
 
 public class DbTest {
 
-    File newDbFile = new File(System.getProperty("user.dir") + "/testDb.mv.db");
-    char[] newDbPassword = new char[] { '1', '2', '3' };
+    static File newDbFile = new File(System.getProperty("user.dir") + "/testDb.mv.db");
+    static char[] newDbPassword = new char[] { '1', '2', '3' };
+    Item testItem;
 
-    @BeforeEach
-    public void createNewTestDatabase() {
+    @BeforeAll
+    public static void createNewTestDatabase() {
         // Create new DB File
         try {
             Db.openDatabase(newDbFile, newDbPassword);
@@ -36,21 +39,15 @@ public class DbTest {
 
     }
 
-    @AfterEach
-    public void deleteTempTestDatabase() {
+    @AfterAll
+    public static void deleteTempTestDatabase() {
         assertTrue(newDbFile.delete());
     }
 
     @Test
     public void testDbCreation() {
         // Create new DB File
-        try {
-            assertTrue(Db.closeConnection());
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            fail(e.getMessage());
-        }
+        assertNotNull(Db.getConnection());
 
     }
 
@@ -69,21 +66,27 @@ public class DbTest {
     }
 
     @Test
-    public Item testItemCreation() throws NullPointerException, SQLException {
+    public void testItemCreation() {
         Clob itemDescription;
-        itemDescription = Db.getConnection().createClob();
-        itemDescription.setString(1, "Test Description");
-        Item testItem = new Item("Unit Test Item", itemDescription, null);
+        testItem = null;
+        try {
+            itemDescription = Db.getConnection().createClob();
+            itemDescription.setString(1, "Test Description");
+            testItem = new Item("Unit Test Item", itemDescription, null);
+        } catch (NullPointerException | SQLException e) {
+            e.printStackTrace();
+        }
         assertNotNull(testItem);
-        return testItem;
     }
 
     @Test
     public void testItemRead() throws SQLException {
-        Item newItem = testItemCreation();
+        if(testItem == null){
+            testItemCreation();
+        }
         Item.items.clear();
-        Item readItem = Item.getItem(newItem.getId());
-        assertEquals(newItem.getId(), readItem.getId());
+        Item readItem = Item.getItem(testItem.getId());
+        assertEquals(testItem.getId(), readItem.getId());
     }
 
 }

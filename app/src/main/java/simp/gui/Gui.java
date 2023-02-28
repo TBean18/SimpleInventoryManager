@@ -23,7 +23,7 @@ public class Gui {
     private static final int BUTTON_VERTICAL_SPACING = 10;
     private String APPLICATION_NAME = "Simple Inventory Manager";
     @Getter
-    JFrame MAIN_WINDOW;
+    static JFrame MAIN_WINDOW;
     public static final Color backgroundColor = new Color(70, 73, 75), foregroundColor = new Color(187, 187, 187);
 
     public Gui() {

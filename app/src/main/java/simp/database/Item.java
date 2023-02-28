@@ -111,6 +111,7 @@ public class Item {
             throw new SQLException(
                     "Affected rows = " + numRows + ". When 1 is expected for inserting an item into the database");
         }
+        log.info("DB insertion for {}. Successful", item);
 
         // Get and return generated id
         ResultSet rs = statement.getGeneratedKeys();
@@ -120,6 +121,10 @@ public class Item {
             throw new SQLException("Unable to retrieve generated keys");
         }
 
+    }
+
+    public String toString() {
+        return String.format("Item: {id: %d, title: %s}", this.id, this.title);
     }
 
 }
