@@ -33,6 +33,7 @@ public class NewDbModal extends SIMModal {
             this);
 
     File selectedNewDatabaseFile;
+    private JLabel fileLabel = new JLabel();
 
     public NewDbModal(@NonNull JFrame owner) {
         super(owner, MODAL_TITLE, true);
@@ -57,6 +58,7 @@ public class NewDbModal extends SIMModal {
         dataBaseFilePanel.add(Box.createHorizontalStrut(5));
         dataBaseFilePanel.add(chooseFileButton);
         ret.add(dataBaseFilePanel);
+        ret.add(fileLabel);
 
         // Password Selection and Confirmation
         ret.add(passwordInputPanel);
@@ -78,6 +80,7 @@ public class NewDbModal extends SIMModal {
                 int response = fileChooser.showSaveDialog(this);
                 if (response == JFileChooser.APPROVE_OPTION) {
                     selectedNewDatabaseFile = fileChooser.getSelectedFile();
+                    fileLabel.setText(selectedNewDatabaseFile.getAbsolutePath());
                 }
                 break;
 
@@ -86,6 +89,7 @@ public class NewDbModal extends SIMModal {
                 if (validatePassword() && selectedNewDatabaseFile != null) {
                     try {
                         Db.openDatabase(selectedNewDatabaseFile, passwordInputPanel.getPassword());
+                        this.dispose();
                     } catch (Exception e1) {
                         e1.printStackTrace();
                         log.error("Error while creating new database: ", e1);
@@ -109,7 +113,7 @@ public class NewDbModal extends SIMModal {
             log.warn("Passwords do not match");
             return false;
         }
-        if (Db.getDatabaseFile() == null) {
+        if (selectedNewDatabaseFile == null) {
             log.warn("File not yet Selected");
             return false;
         }
