@@ -1,4 +1,6 @@
 ## TODO
 
-- [ ] Database File Encryption
+- [x] Database File Encryption
+- [ ] Modals for each datatype
+- [ ] Views for each datatype
 - [ ] Password-less Models

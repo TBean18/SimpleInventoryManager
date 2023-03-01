@@ -76,6 +76,7 @@ public class Db {
                 log.info("Metadata: {}", metaData.toString());
                 runStartUpScript();
                 isSignedIn = true;
+                Inventory.getInventoryCacheFromDb();
             }
         } catch (SQLException e) {
             log.error("Failure to create new database connection", e);

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
+import simp.gui.InventoryTable;
 
 @Slf4j
 public class Inventory {
@@ -18,14 +19,16 @@ public class Inventory {
     public Item item;
     public Store store;
 
+    public final static List<Inventory> inventoryCache = new ArrayList<>();
+
     public Inventory(int quantity, Item item, Store store) {
         this.quantity = quantity;
         this.item = item;
         this.store = store;
     }
 
-    public static List<Inventory> getAllInventoriesFromDb() {
-        ArrayList<Inventory> ret = new ArrayList<>();
+    public static List<Inventory> getInventoryCacheFromDb() {
+        inventoryCache.clear();
         Connection conn = Db.getConnection();
 
         try {
@@ -40,7 +43,7 @@ public class Inventory {
             }
 
             while (res.next()) {
-                ret.add(parseInventoryRow(res));
+                inventoryCache.add(parseInventoryRow(res));
             }
 
         } catch (SQLException e) {
@@ -48,7 +51,8 @@ public class Inventory {
             log.error("Error occurred while retrieving inventories", e);
         }
 
-        return ret;
+        InventoryTable.getTableModel().fireTableDataChanged();
+        return inventoryCache;
 
     }
 

@@ -25,9 +25,9 @@ CREATE TABLE if not exists Inventories (
 );
 
 
-INSERT INTO Items (ITEM_ID, ITEM_Title) VALUES (0, 'Example Item');
-INSERT INTO Stores (STORE_ID, STORE_Title) VALUES  (0, 'Example Store');
-INSERT INTO Inventories (Item_ID, Store_ID, INVENTORY_quantity) VALUES (0,0,1);
+MERGE INTO Items (ITEM_ID, ITEM_Title) KEY(ITEM_ID) VALUES (0, 'Example Item');
+MERGE INTO Stores (STORE_ID, STORE_Title) KEY(STORE_ID) VALUES  (0, 'Example Store');
+MERGE INTO Inventories (Inventory_Id, Item_ID, Store_ID, INVENTORY_quantity) KEY(Inventory_ID) VALUES (0,0,0,1);
 
 -- SELECT * from Inventories 
     -- JOIN Items on Inventories.ItemID = Items.ID

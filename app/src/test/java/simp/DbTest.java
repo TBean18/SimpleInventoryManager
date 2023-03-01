@@ -11,12 +11,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import lombok.extern.java.Log;
 import simp.database.Db;
 import simp.database.Inventory;
 import simp.database.Item;
@@ -55,8 +52,10 @@ public class DbTest {
     @Test
     public void testDbObjects() {
         try {
-            List<Inventory> allInventoriesFromDb = Inventory.getAllInventoriesFromDb();
+            List<Inventory> allInventoriesFromDb = Inventory.getInventoryCacheFromDb();
             assertTrue(!allInventoriesFromDb.isEmpty());
+            // Expect the example inventory stored in the database
+            assertEquals(1, allInventoriesFromDb.size());
 
         } catch (Exception e) {
             // TODO Auto-generated catch block
@@ -88,6 +87,7 @@ public class DbTest {
         Item.items.clear();
         Item readItem = Item.getItem(testItem.getId());
         assertEquals(testItem.getId(), readItem.getId());
+        assertTrue(testItem.equals(readItem));
     }
 
     @Test

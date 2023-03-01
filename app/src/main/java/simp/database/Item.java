@@ -63,6 +63,7 @@ public class Item {
         this.image = image;
         // Insert and acquire the unique final id
         this.id = Item.insertItemIntoDatabase(this);
+        log.info("DB insertion for {}. Successful", this);
         Item.items.put(this.id, this);
     }
 
@@ -130,7 +131,6 @@ public class Item {
             throw new SQLException(
                     "Affected rows = " + numRows + ". When 1 is expected for inserting an item into the database");
         }
-        log.info("DB insertion for {}. Successful", item);
 
         // Get and return generated id
         ResultSet rs = statement.getGeneratedKeys();
@@ -143,7 +143,7 @@ public class Item {
     }
 
     /**
-     * Used to update the Item both in memory and in database with `newData`
+     * Used to update the Item both in memory and in database with `newData
      * 
      * @param newData Holds the values for the updated Item object
      */
@@ -154,6 +154,7 @@ public class Item {
         stmt.setClob(2, newData.descriptionText);
         stmt.setBlob(3, newData.image);
         stmt.setInt(4, this.id);
+        log.info("Executing SQL Update {} on Item {}", stmt.toString(), this);
 
         int numRows = stmt.executeUpdate();
         if (numRows != 1) {
@@ -174,10 +175,10 @@ public class Item {
         if (!this.title.equals(i.title))
             return false;
 
-        if (!this.descriptionText.equals(i.descriptionText))
-            return false;
+        // if (!this.descriptionText.equals(i.descriptionText))
+        // return false;
 
-        if (!this.image.equals(i.image))
+        if (this.image != i.image)
             return false;
         return true;
     }

@@ -5,6 +5,7 @@ import java.awt.Dimension;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -38,7 +39,7 @@ public class Gui {
         }
 
         MAIN_WINDOW.setJMenuBar(new SIMMenuBar());
-        MAIN_WINDOW.add(new JPanel());
+        MAIN_WINDOW.add(new JScrollPane(new InventoryTable()));
 
         MAIN_WINDOW.setVisible(true);
 

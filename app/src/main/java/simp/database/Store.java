@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Getter;
+
 public class Store {
     public final static String STORE_ID = "STORE_ID";
     public final static String STORE_TITLE = "STORE_TITLE";
@@ -14,7 +16,9 @@ public class Store {
     static final Map<Integer, Store> stores = new HashMap();
 
     int id;
+    @Getter
     String title;
+    @Getter
     Clob descriptionText;
 
     public Store(int id, String title, Clob descriptionText) {
