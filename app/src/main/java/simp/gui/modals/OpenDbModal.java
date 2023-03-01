@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import simp.database.Db;
 import simp.gui.Gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,6 +32,7 @@ public class OpenDbModal extends JDialog implements ActionListener {
     private JButton cancelButton = new JButton("Cancel");
     private JButton okButton = new JButton("Ok");
     private JPasswordField passwordInputField = new JPasswordField(12);
+    private JLabel errorLabel = new JLabel();
 
     public OpenDbModal(@NonNull JFrame owner, @NonNull File databaseFile) {
         super(owner, MODAL_LABEL, true);
@@ -66,6 +68,9 @@ public class OpenDbModal extends JDialog implements ActionListener {
         // Add Glue between the Labels and the Buttons
         ret.add(Box.createVerticalGlue());
 
+        errorLabel.setForeground(Color.red);
+        ret.add(errorLabel);
+
         // Finally add the button panes
         JPanel buttons = SIMModal.generateConfirmationButtonsPanel(this);
         ret.add(buttons);
@@ -86,6 +91,7 @@ public class OpenDbModal extends JDialog implements ActionListener {
                 this.dispose();
             } catch (Exception e1) {
                 log.error("Error occurred while opening database in modal", e1);
+                errorLabel.setText(e1.getMessage());
                 e1.printStackTrace();
             }
 

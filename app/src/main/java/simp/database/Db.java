@@ -58,7 +58,7 @@ public class Db {
      * Used to provision a new database if none exists at the provided path.
      * Sets Static Connection on successful connection
      */
-    public static void openDatabase(File dbFile, char[] password) throws Exception {
+    public static void openDatabase(File dbFile, char[] password) throws SQLException {
         String filePath = dbFile.getAbsolutePath();
         String dbPath = filePath;
         if (filePath.substring(filePath.length() - 6).equals(".mv.db")) {
@@ -71,7 +71,6 @@ public class Db {
 
         try {
             connection = DriverManager.getConnection(url, "sa", new String(password));
-            Arrays.fill(password, '0');
             if (connection != null) {
                 DatabaseMetaData metaData = connection.getMetaData();
                 log.info("Metadata: {}", metaData.toString());
@@ -81,7 +80,9 @@ public class Db {
         } catch (SQLException e) {
             log.error("Failure to create new database connection", e);
             e.printStackTrace();
-            throw new NullPointerException("Failed to Open DB with Error: " + e.getMessage());
+            throw e;
+        } finally {
+            Arrays.fill(password, '0');
         }
 
     }
